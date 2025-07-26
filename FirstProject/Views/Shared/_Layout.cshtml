@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] </title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <!-- Toastr & Animate CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- CSS for DataTables -->
+    <link href="~/css/datatables.min.css" rel="stylesheet" />
+    <!-- CSS for TinyMce -->
+    <script src="https://cdn.tiny.cloud/1/cy024ug9b7fu5ev4os9i78rnyj5wir0y9kmaapa7dhjjeywx/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
+</head>
+<body  >
+
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg bg-warning-subtle  shadow-sm sticky-top py-3 border-bottom border-warning">
+            <div class="container">
+                <!-- Brand -->
+                <a class="navbar-brand fw-bold text-dark d-flex align-items-center gap-1" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-book-half fs-4 text-warning"></i>
+                    <span class="fs-4">Books Palace</span>
+                </a>
+                
+                <!-- Toggler -->
+                <button class="navbar-toggler px-3 py-2 border-0 rounded bg-warning-subtle shadow-sm"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon custom-toggler-icon"></span>
+                </button>
+               
+
+
+                <!-- Links -->
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav ms-auto text-center w-100 justify-content-center gap-3">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="Customer" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door-fill me-1"></i> Home
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-semibold" asp-area="Customer" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-lock me-1"></i> Privacy
+                            </a>
+                        </li>
+
+                        <!-- Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" id="manageDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear-fill me-1"></i> Manage
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 animate__animated animate__fadeIn">
+                                <li>
+                                    <a class="dropdown-item text-dark" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                                        <i class="bi bi-tags-fill me-2 text-warning"></i> Categories
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-dark" asp-area="Admin" asp-controller="Product" asp-action="Index">
+                                        <i class="bi bi-book-fill me-2 text-warning"></i> Books
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <style>
+        .custom-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(33, 37, 41, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+    </style>
+
+
+    <!-- Main Content -->
+    <main>
+        <div class="container py-4">
+            <partial name="_Notifications" />
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span>&copy; 2025 - Made with <i class="bi bi-heart-fill"></i> by <a class="text-white" href="https://github.com/muhammadasad878"> &#64; Muhammad Asad</a></span>
+             
+            <a class="text-white text-decoration-none" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/datatables.min.js" ></script>
+    <script src="~/js/product.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

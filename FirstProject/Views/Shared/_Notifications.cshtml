@@ -1,0 +1,39 @@
+﻿@{
+	if(TempData["SuccessMessage"] != null)
+	{
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+		
+			<script type="text/javascript">
+			toastr.success('@TempData["SuccessMessage"]');
+			</script>
+		// <div class="alert alert-success alert-dismissible fade show" role="alert">
+		// 	@TempData["SuccessMessage"]
+		// 	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		// </div>
+	
+	}
+	if(TempData["ErrorMessage"] != null)
+	{
+		<script src="~/lib/jquery/dist/jquery.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+		<script type="text/javascript">
+			toastr.error('@TempData["ErrorMessage"]');
+		</script>
+		
+		// <div class="alert alert-danger alert-dismissible fade show" role="alert">
+		// 	@TempData["ErrorMessage"]
+		// 	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		// </div>
+	
+	}
+}
+@* 
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/tostr/tostr.js"></script>
+<link href="~/lib/tostr/tostr.css" />
+
+<script type="text/javascript">
+	toastr.error('@TempData["ErrorMessage"]');
+</script> *@

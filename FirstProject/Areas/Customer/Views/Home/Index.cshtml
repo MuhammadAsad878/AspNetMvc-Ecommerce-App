@@ -1,0 +1,74 @@
+﻿@model PaginationVM
+@{
+	ViewData["Title"] = "Books Palace";
+}
+
+
+<div class="row pb-3 p-2">
+
+	@if (Model.products?.Any() == true)
+	{
+		<style>
+			.product-card {
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+			}
+
+				.product-card:hover {
+					transform: scale(1.02);
+					box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+				}
+
+				.product-card img {
+					transition: transform 0.4s ease;
+				}
+
+				.product-card:hover img {
+					transform: scale(1.05);
+				}
+
+		</style>
+		@foreach (var prd in Model.products)
+		{
+			@await Html.PartialAsync("_ProductCard", prd)
+		}
+	}
+	else
+	{
+		<div class="col-12 text-center text-muted p-5">
+			<h4>No products found.</h4>
+		</div>
+	}
+
+
+	<div>
+		<ul style="display:flex;justify-content:center;align-items:center">
+
+			@if (Model.CurrPage > 1)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrPage - 1)">Previous</a>
+				</li>
+			}
+
+			@{
+				int start = Math.Max(1, Model.CurrPage - 2);
+				int end = Math.Min(Model.TotalPages, Model.CurrPage + 2);
+			}
+
+			@for (int i = start; i <= end; i++)
+			{
+				<li class="page-item @(i == Model.CurrPage ? "active" : "")">
+					<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+				</li>
+			}
+
+			@if (Model.CurrPage < Model.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrPage + 1)">Next</a>
+				</li>
+			}
+
+		</ul>
+	</div>
+</div>

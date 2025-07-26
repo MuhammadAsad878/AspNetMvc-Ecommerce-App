@@ -1,0 +1,45 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Manage Books";
+}
+
+<div class="container py-4">
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-6 col-12">
+            <h2 class="text-secondary">📚 Manage Books</h2>
+        </div>
+        <div class="col-md-6 col-12 text-md-end text-start mt-2 mt-md-0">
+            <a asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="btn btn-warning text-dark fw-semibold shadow-sm">
+                <i class="bi bi-plus-square me-1"></i> Add New Book
+            </a>
+        </div>
+    </div>
+
+    <!-- Book Table -->
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-hover align-middle table-bordered bg-white w-100" id="productTable" class="display">
+         <thead>
+             <tr>
+                 <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Price</th>
+                    <th>Price50</th>
+                    <th>Price100</th>
+                    <th>Category</th>
+             </tr>
+         </thead>
+         <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+ @section Scripts {
+		     @* // Ensure the script path is correct this script contains the DataTable initialization and other JS logic  *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script src="~/js//product.js"></script>
+
+ }
+   

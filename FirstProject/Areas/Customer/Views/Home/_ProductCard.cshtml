@@ -1,0 +1,40 @@
+﻿@model Product
+
+<div class="col-lg-3 col-md-4 col-6 p-2">
+	<div class="card product-card border-0 shadow-sm rounded-4 h-100 overflow-hidden position-relative transition-all">
+		<div class="overflow-hidden rounded-top">
+			<img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "/images/default-book.png")"
+				 alt="@Model.Title"
+				 loading="lazy"
+				 class="card-img-top img-fluid transition-all"
+				 style="height: 220px; object-fit: cover;" />
+		</div>
+
+		<div class="card-body text-center d-flex flex-column justify-content-between">
+			<div>
+				<h5 class="card-title text-uppercase fw-bold text-dark opacity-75 mb-2">@Model.Title</h5>
+				<p class="text-danger mb-2 small">By @Model.Author</p>
+			</div>
+
+			<div>
+				<p class="text-muted mb-1 small">
+					List Price:
+					<span class="text-decoration-line-through">@Model.Price.ToString("c")</span>
+				</p>
+				<p class="mb-3 small">
+					As low as:
+					<span class="badge bg-dark text-white px-3 py-2 fs-6 rounded-pill">@Model.Price100.ToString("c")</span>
+				</p>
+			</div>
+
+			<button class="btn btn-outline-dark btn-sm rounded-pill mt-auto">
+				<i class="bi bi-cart-plus me-2"></i> Add to Cart
+			</button>
+		</div>
+
+		<a href="#" class="position-absolute top-0 end-0 m-2 text-danger fs-5">
+			<i class="bi bi-heart"></i>
+		</a>
+	</div>
+</div>
+

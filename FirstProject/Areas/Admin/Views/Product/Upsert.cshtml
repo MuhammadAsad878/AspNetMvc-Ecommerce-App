@@ -1,0 +1,153 @@
+﻿@model ProductVM
+
+@{
+    ViewData["Title"] = Model.Product.Id > 0 ? $"Update -  {Model.Product.Title}" : "Add New Book";   
+}
+
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+     
+        <div class="col-md-8">
+            <form method="post" enctype="multipart/form-data" asp-area="Admin" asp-controller="Product" asp-action="Upsert" class="rounded shadow-sm border border-warning-subtle">
+                @Html.AntiForgeryToken()
+                <input hidden asp-for="Product.Id" />
+                <input hidden asp-for="Product.ImageUrl" />
+
+                <!-- Header -->
+                <div class="bg-warning-subtle rounded-top p-4 text-dark">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>                         
+                           @if (Model.Product.Id > 0 )
+                            {
+                                <h6 class="mb-1 text-secondary">
+                                    Update 
+                                </h6>
+                                <h2 class="mb-0">@Model.Product.Title</h2>
+                            }
+                            else
+                            {
+
+                            <h6 class="mb-1 text-secondary">
+                                Add New
+                            </h6>
+                                <h2 class="mb-0"> 📘 Book Info</h2>
+                                                       
+                            } 
+                            
+                        </div>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left-circle me-1"></i> Back
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Form Body -->
+                <div class="p-4 bg-light-subtle rounded-bottom">                   
+                    <div class="row">
+                        <input type="text" hidden asp-for="Product.ImageUrl" />
+                        <!-- Title & Author & Description col-10 -->
+                        <div class="col-8">
+                            <div class="mb-3 ">
+                                <label asp-for="Product.Title" class="form-label text-dark fw-semibold"></label>
+                                <input asp-for="Product.Title" class="form-control border border-secondary-subtle" placeholder="Book Title" required />
+                                <span asp-validation-for="Product.Title" class="text-danger small"></span>
+                            </div>
+                            <div class="mb-3 ">
+                                <label asp-for="Product.Author" class="form-label text-dark fw-semibold"></label>
+                                <input asp-for="Product.Author" class="form-control border border-secondary-subtle" placeholder="Author Name" required />
+                                <span asp-validation-for="Product.Author" class="text-danger small"></span>
+                            </div>
+                            <div class="mb-3 ">
+                                <label asp-for="Product.ISBN" class="form-label text-dark fw-semibold"></label>
+                                <input asp-for="Product.ISBN" class="form-control border border-secondary-subtle" placeholder="ISBN" required />
+                                <span asp-validation-for="Product.ISBN" class="text-danger small"></span>
+                            </div>
+                        </div>
+                        <!-- Image & File col-2-->
+                        <div class="col-4">
+                            
+                                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+                                {
+                                    <img src="~/@Model.Product.ImageUrl" alt="@Model.Product.Title" class="img-thumbnail" style="min-height:150px ;max-height: 250px;" />
+                                }
+                                else
+                                {
+                                <img src="~/images/default-book.png" alt="No Image" class="img-thumbnail" style="min-height:150px ;max-height: 200px;" />
+                                }
+                            <div class="text-sm-center">                            
+                         <input name="file" type="file" class="btn btn-sm"  />
+                            </div>
+                    </div>
+                    <!-- Descriptinon -->
+                        <div class="mb-3">
+                            <label asp-for="Product.Description" class="form-label text-dark fw-semibold"></label>
+                            <textarea asp-for="Product.Description" id="editor" rows="3" class="form-control" placeholder="Book Description"></textarea>
+                            <span asp-validation-for="Product.Description" class="text-danger small"></span>
+                        </div>
+                        @* <script>
+                            tinymce.init({
+                              selector: 'textarea',
+                              promotion: false, // disables the "Upgrade" banner
+                              plugins: [
+                                'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'visualblocks', 'wordcount'
+                              ],
+                              toolbar: 'undo redo | bold italic underline | bullist numlist | link image | preview',
+                              menubar: false, // hides the top menu bar
+                              branding: false, // removes "Powered by Tiny" branding
+                              height: 300, // optional height setting
+                            });
+                        </script> *@
+
+
+                  
+                    
+
+                    <!-- ISBN & Price-->
+                    <div class="row">                       
+                        <div class="mb-3 col-6">
+                            <label asp-for="Product.Price" class="form-label text-dark fw-semibold"></label>
+                            <input asp-for="Product.Price" step="any" class="form-control border border-secondary-subtle" placeholder="Price for 1–50 copies" required />
+                            <span asp-validation-for="Product.Price" class="text-danger small"></span>
+                        </div>
+                    </div>
+                    <!-- Price50 & Price100-->
+                    <div class="row">
+                        <div class="mb-3 col-6">
+                            <label asp-for="Product.Price50" class="form-label text-dark fw-semibold"></label>
+                            <input asp-for="Product.Price50" step="any" class="form-control border border-secondary-subtle" placeholder="Price for 50+ copies" required />
+                            <span asp-validation-for="Product.Price50" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3 col-6">
+                            <label asp-for="Product.Price100" class="form-label text-dark fw-semibold"></label>
+                            <input asp-for="Product.Price100" step="any" class="form-control border border-secondary-subtle" placeholder="Price for 100+ copies" required />
+                            <span asp-validation-for="Product.Price100" class="text-danger small"></span>
+                        </div>                       
+                    </div>
+                    <!-- Category & Image URL-->
+                    <div class="row">
+                        <div class="mb-3 col-12">
+                            <select asp-for="Product.CategoryId" asp-items="Model.catListItems" class="form-select border border-secondary-subtle">
+                                <option disabled selected>-- Select category --</option>
+                            </select>
+                            <label asp-for="Product.CategoryId" class="form-label ms-2 text-dark fw-semibold">category</label>
+                            <span asp-validation-for="Product.CategoryId" class="text-danger small"></span>
+                        </div>
+                       
+                    </div>
+                    <div asp-validation-summary="All"></div>
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn btn-warning text-dark fw-semibold">
+                            <i class="bi bi-plus-circle-fill me-1"></i> @(Model.Product.Id > 0 ? "Update" : "Add") Book
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>        
+        
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
