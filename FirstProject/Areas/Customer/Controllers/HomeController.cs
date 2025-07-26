@@ -2,7 +2,6 @@ using System.Diagnostics;
 using Ecom.DataAccess.Repository.IRepository;
 using Ecom.Models;
 using Ecom.Models.ViewModels;
-using FirstProject.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceMVC.Areas.Customer.Controllers
