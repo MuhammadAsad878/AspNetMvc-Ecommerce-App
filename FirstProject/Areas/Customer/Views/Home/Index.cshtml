@@ -3,112 +3,160 @@
 	ViewData["Title"] = "Books Palace";
 }
 
+<style>
+	.product-card {
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
 
-<div class="row pb-3 p-2">
+		.product-card:hover {
+			transform: scale(1.02);
+			box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+		}
 
-	@if (Model.products?.Any() == true)
+		.product-card img {
+			transition: transform 0.4s ease;
+		}
+
+		.product-card:hover img {
+			transform: scale(1.05);
+		}
+
+	.pagination-wrapper {
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+	}
+</style>
+
+<div class="container">
+
+	<!-- 🧭 Top Pagination -->
+	@if (Model.TotalPages > 1)
 	{
-		<style>
-			.product-card {
-				transition: transform 0.3s ease, box-shadow 0.3s ease;
-			}
+		<nav class="pagination-wrapper d-flex justify-content-center" aria-label="Top pagination">
+			<ul class="pagination pagination-sm shadow-sm rounded-pill">
 
-				.product-card:hover {
-					transform: scale(1.02);
-					box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+				@if (Model.CurrPage > 1)
+				{
+					<li class="page-item">
+						<a class="page-link rounded-start" asp-action="Index" asp-route-page="@(Model.CurrPage - 1)" aria-label="Previous">
+							&laquo;
+						</a>
+					</li>
 				}
 
-				.product-card img {
-					transition: transform 0.4s ease;
+				@{
+					int start = Math.Max(1, Model.CurrPage - 2);
+					int end = Math.Min(Model.TotalPages, Model.CurrPage + 2);
 				}
 
-				.product-card:hover img {
-					transform: scale(1.05);
+				@for (int i = start; i <= end; i++)
+				{
+					<li class="page-item @(i == Model.CurrPage ? "active" : "")">
+						<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+					</li>
 				}
 
-		</style>
-		@foreach (var prd in Model.products)
+				@if (Model.CurrPage < Model.TotalPages)
+				{
+					<li class="page-item">
+						<a class="page-link rounded-end" asp-action="Index" asp-route-page="@(Model.CurrPage + 1)" aria-label="Next">
+							&raquo;
+						</a>
+					</li>
+				}
+
+			</ul>
+		</nav>
+	}
+
+	<!-- 🛒 Product Grid -->
+	<div class="row pb-3 p-2">
+		@if (Model.products?.Any() == true)
 		{
-			
-			<div class="col-lg-3 col-md-4 col-6 p-2">
-				<a href="#" class="text-decoration-none">
-				<div class="card product-card border-0 shadow-sm rounded-4 h-100 overflow-hidden position-relative transition-all">
-					<div class="overflow-hidden rounded-top">
-						<img src="@(!string.IsNullOrEmpty(prd.ImageUrl) ? prd.ImageUrl : "/images/default-book.png")"
-							 alt="@prd.Title"
-							 loading="lazy"
-							 class="card-img-top img-fluid transition-all"
-							 style="height: 220px; object-fit: cover;" />
-					</div>
+			@foreach (var prd in Model.products)
+			{
+				<div class="col-lg-3 col-md-4 col-6 p-2">
+					<a href="#" class="text-decoration-none">
+						<div class="card product-card border-0 shadow rounded-4 h-100 overflow-hidden position-relative">
+							<div class="overflow-hidden rounded-top">
+								<img src="@(!string.IsNullOrEmpty(prd.ImageUrl) ? prd.ImageUrl : "/images/default-book.png")"
+									 alt="@prd.Title"
+									 loading="lazy"
+									 class="card-img-top img-fluid"
+									 style="height: 220px; object-fit: cover;" />
+							</div>
 
-					<div class="card-body text-center d-flex flex-column justify-content-between">
-						<div>
-							<h5 class="card-title text-uppercase fw-bold text-dark opacity-75 mb-2">@prd.Title</h5>
-							<p class="text-danger mb-2 small">By @prd.Author</p>
+							<div class="card-body text-center d-flex flex-column justify-content-between">
+								<div>
+									<h5 class="card-title text-uppercase fw-bold text-dark opacity-75 mb-2">@prd.Title</h5>
+									<p class="text-danger mb-2 small">By @prd.Author</p>
+								</div>
+
+								<div>
+									<p class="text-muted mb-1 small">
+										List Price:
+										<span class="text-decoration-line-through">@prd.Price.ToString("c")</span>
+									</p>
+									<p class="mb-3 small">
+										As low as:
+										<span class="badge bg-dark text-white px-3 py-2 fs-6 rounded-pill">@prd.Price100.ToString("c")</span>
+									</p>
+								</div>
+
+								<button class="btn btn-outline-dark btn-sm rounded-pill mt-auto">
+									<i class="bi bi-cart-plus me-2"></i> Add to Cart
+								</button>
+							</div>
+
+							<a href="#" class="position-absolute top-0 end-0 m-2 text-danger fs-5">
+								<i class="bi bi-heart"></i>
+							</a>
 						</div>
-
-						<div>
-							<p class="text-muted mb-1 small">
-								List Price:
-								<span class="text-decoration-line-through">@prd.Price.ToString("c")</span>
-							</p>
-							<p class="mb-3 small">
-								As low as:
-								<span class="badge bg-dark text-white px-3 py-2 fs-6 rounded-pill">@prd.Price100.ToString("c")</span>
-							</p>
-						</div>
-
-						<button class="btn btn-outline-dark btn-sm rounded-pill mt-auto">
-							<i class="bi bi-cart-plus me-2"></i> Add to Cart
-						</button>
-					</div>
-
-					<a href="#" class="position-absolute top-0 end-0 m-2 text-danger fs-5">
-						<i class="bi bi-heart"></i>
 					</a>
 				</div>
-				</a>
-
+			}
+		}
+		else
+		{
+			<div class="col-12 text-center text-muted p-5">
+				<h4>No products found.</h4>
 			</div>
 		}
-	}
-	else
-	{
-		<div class="col-12 text-center text-muted p-5">
-			<h4>No products found.</h4>
-		</div>
-	}
-
-
-	<div>
-		<ul style="display:flex;justify-content:center;align-items:center">
-
-			@if (Model.CurrPage > 1)
-			{
-				<li class="page-item">
-					<a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrPage - 1)">Previous</a>
-				</li>
-			}
-
-			@{
-				int start = Math.Max(1, Model.CurrPage - 2);
-				int end = Math.Min(Model.TotalPages, Model.CurrPage + 2);
-			}
-
-			@for (int i = start; i <= end; i++)
-			{
-				<li class="page-item @(i == Model.CurrPage ? "active" : "")">
-					<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
-				</li>
-			}
-
-			@if (Model.CurrPage < Model.TotalPages)
-			{
-				<li class="page-item">
-					<a class="page-link" asp-action="Index" asp-route-page="@(Model.CurrPage + 1)">Next</a>
-				</li>
-			}
-
-		</ul>
 	</div>
+
+	<!-- 🔻 Bottom Pagination -->
+	@if (Model.TotalPages > 1)
+	{
+		<nav class="pagination-wrapper d-flex justify-content-center" aria-label="Bottom pagination">
+			<ul class="pagination pagination-sm shadow-sm rounded-pill">
+
+				@if (Model.CurrPage > 1)
+				{
+					<li class="page-item">
+						<a class="page-link rounded-start" asp-action="Index" asp-route-page="@(Model.CurrPage - 1)" aria-label="Previous">
+							&laquo;
+						</a>
+					</li>
+				}
+
+				@for (int i = Math.Max(1, Model.CurrPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrPage + 2); i++)
+				{
+					<li class="page-item @(i == Model.CurrPage ? "active" : "")">
+						<a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+					</li>
+				}
+
+				@if (Model.CurrPage < Model.TotalPages)
+				{
+					<li class="page-item">
+						<a class="page-link rounded-end" asp-action="Index" asp-route-page="@(Model.CurrPage + 1)" aria-label="Next">
+							&raquo;
+						</a>
+					</li>
+				}
+
+			</ul>
+		</nav>
+	}
+
 </div>

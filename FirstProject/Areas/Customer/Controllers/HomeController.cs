@@ -46,5 +46,28 @@ namespace EcommerceMVC.Areas.Customer.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [ActionName("wishlist")]
+        public IActionResult WishList()
+        {
+            return View();
+        }
+
+        [ActionName("wishlist2")]
+        public IActionResult WishList2()
+        {
+            return View();
+        }
+        [ActionName("check-out")]
+        public IActionResult CheckOut()
+        {
+            return View();
+        }
+
+        #region
+
+        // This is a private method that can be used for internal logic within the controller
+
+        #endregion
     }
 }

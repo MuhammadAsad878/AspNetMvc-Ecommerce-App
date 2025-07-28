@@ -1,0 +1,813 @@
+﻿@{
+	ViewData["Title"] = "My Wishlist - Books Palace";
+}
+
+<style>
+	:root {
+		--primary-color: #2c3e50;
+		--accent-color: #e74c3c;
+		--success-color: #27ae60;
+		--warning-color: #f39c12;
+		--text-primary: #2c3e50;
+		--text-secondary: #7f8c8d;
+		--bg-light: #f8f9fa;
+		--border-light: #e9ecef;
+		--shadow-light: 0 2px 12px rgba(0, 0, 0, 0.08);
+		--shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+		--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	body {
+		font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+		color: var(--text-primary);
+		line-height: 1.6;
+		background: var(--bg-light);
+	}
+
+	/* Header Section */
+	.page-header {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		padding: 3rem 0 2rem;
+		margin-bottom: 3rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+		.page-header::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+			opacity: 0.1;
+		}
+
+	.breadcrumb-nav {
+		margin-bottom: 1.5rem;
+		position: relative;
+		z-index: 1;
+	}
+
+	.breadcrumb {
+		background: none;
+		padding: 0;
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.breadcrumb-item a {
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		transition: var(--transition);
+	}
+
+		.breadcrumb-item a:hover {
+			color: white;
+		}
+
+	.breadcrumb-item.active {
+		color: white;
+	}
+
+	.page-title {
+		font-size: 2.5rem;
+		font-weight: 700;
+		margin: 0;
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.wishlist-count {
+		background: rgba(255, 255, 255, 0.2);
+		padding: 0.5rem 1rem;
+		border-radius: 50px;
+		font-size: 1rem;
+		font-weight: 500;
+	}
+
+	/* Action Bar */
+	.action-bar {
+		background: white;
+		border-radius: 12px;
+		padding: 1.5rem;
+		margin-bottom: 2rem;
+		box-shadow: var(--shadow-light);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+	}
+
+	.action-left {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+	}
+
+	.select-all-checkbox {
+		width: 18px;
+		height: 18px;
+		accent-color: var(--primary-color);
+	}
+
+	.bulk-actions {
+		display: flex;
+		gap: 0.75rem;
+		opacity: 0;
+		transition: var(--transition);
+		pointer-events: none;
+	}
+
+		.bulk-actions.active {
+			opacity: 1;
+			pointer-events: all;
+		}
+
+	.action-btn {
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--border-light);
+		background: white;
+		color: var(--text-primary);
+		border-radius: 6px;
+		font-size: 0.85rem;
+		cursor: pointer;
+		transition: var(--transition);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+		.action-btn:hover {
+			background: var(--bg-light);
+			transform: translateY(-1px);
+		}
+
+		.action-btn.danger:hover {
+			background: var(--accent-color);
+			color: white;
+			border-color: var(--accent-color);
+		}
+
+	.sort-dropdown {
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--border-light);
+		border-radius: 6px;
+		background: white;
+		font-size: 0.9rem;
+		cursor: pointer;
+	}
+
+	/* Wishlist Grid */
+	.wishlist-grid {
+		display: grid;
+		gap: 1.5rem;
+	}
+
+	.wishlist-item {
+		background: white;
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: var(--shadow-light);
+		transition: var(--transition);
+		border: 1px solid var(--border-light);
+		position: relative;
+	}
+
+		.wishlist-item:hover {
+			box-shadow: var(--shadow-hover);
+			transform: translateY(-2px);
+		}
+
+		.wishlist-item.selected {
+			border-color: var(--primary-color);
+			box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.1);
+		}
+
+	.item-content {
+		display: grid;
+		grid-template-columns: auto 120px 1fr auto;
+		gap: 1.5rem;
+		padding: 1.5rem;
+		align-items: center;
+	}
+
+	.item-checkbox {
+		width: 18px;
+		height: 18px;
+		accent-color: var(--primary-color);
+	}
+
+	.item-image {
+		width: 100px;
+		height: 120px;
+		border-radius: 8px;
+		object-fit: cover;
+		box-shadow: var(--shadow-light);
+	}
+
+	.item-details {
+		min-width: 0;
+	}
+
+	.item-title {
+		font-size: 1.1rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin: 0 0 0.5rem 0;
+		line-height: 1.4;
+	}
+
+		.item-title a {
+			color: inherit;
+			text-decoration: none;
+			transition: var(--transition);
+		}
+
+			.item-title a:hover {
+				color: var(--primary-color);
+			}
+
+	.item-author {
+		color: var(--text-secondary);
+		font-size: 0.9rem;
+		margin-bottom: 0.75rem;
+	}
+
+	.item-meta {
+		display: flex;
+		gap: 1rem;
+		font-size: 0.85rem;
+		color: var(--text-secondary);
+		margin-bottom: 1rem;
+	}
+
+	.item-price {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: var(--accent-color);
+		margin-bottom: 0.75rem;
+	}
+
+	.stock-status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 0.8rem;
+		font-weight: 500;
+		padding: 0.25rem 0.5rem;
+		border-radius: 4px;
+	}
+
+		.stock-status.in-stock {
+			background: rgba(39, 174, 96, 0.1);
+			color: var(--success-color);
+		}
+
+		.stock-status.out-of-stock {
+			background: rgba(231, 76, 60, 0.1);
+			color: var(--accent-color);
+		}
+
+	.item-actions {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		align-items: flex-end;
+	}
+
+	.btn {
+		padding: 0.5rem 1rem;
+		border: none;
+		border-radius: 6px;
+		font-size: 0.85rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition: var(--transition);
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-width: 120px;
+	}
+
+	.btn-primary {
+		background: var(--primary-color);
+		color: white;
+	}
+
+		.btn-primary:hover {
+			background: #34495e;
+			transform: translateY(-1px);
+		}
+
+	.btn-outline {
+		background: transparent;
+		color: var(--text-secondary);
+		border: 1px solid var(--border-light);
+	}
+
+		.btn-outline:hover {
+			background: var(--bg-light);
+			color: var(--text-primary);
+		}
+
+	.remove-btn {
+		background: none;
+		border: none;
+		color: var(--text-secondary);
+		cursor: pointer;
+		padding: 0.5rem;
+		border-radius: 4px;
+		transition: var(--transition);
+	}
+
+		.remove-btn:hover {
+			color: var(--accent-color);
+			background: rgba(231, 76, 60, 0.1);
+		}
+
+	/* Empty State */
+	.empty-wishlist {
+		text-align: center;
+		padding: 4rem 2rem;
+		background: white;
+		border-radius: 12px;
+		box-shadow: var(--shadow-light);
+	}
+
+	.empty-icon {
+		font-size: 4rem;
+		margin-bottom: 1.5rem;
+		opacity: 0.5;
+	}
+
+	.empty-title {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+		color: var(--text-primary);
+	}
+
+	.empty-message {
+		color: var(--text-secondary);
+		margin-bottom: 2rem;
+		font-size: 1rem;
+	}
+
+	.btn-large {
+		padding: 0.75rem 2rem;
+		font-size: 1rem;
+	}
+
+	/* Toast Notifications */
+	.toast-container {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		z-index: 1000;
+	}
+
+	.toast {
+		background: white;
+		border-radius: 8px;
+		padding: 1rem 1.5rem;
+		margin-bottom: 0.5rem;
+		box-shadow: var(--shadow-hover);
+		border-left: 4px solid var(--success-color);
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		transform: translateX(100%);
+		transition: var(--transition);
+		min-width: 300px;
+	}
+
+		.toast.show {
+			transform: translateX(0);
+		}
+
+		.toast.error {
+			border-left-color: var(--accent-color);
+		}
+
+		.toast.warning {
+			border-left-color: var(--warning-color);
+		}
+
+	/* Responsive Design */
+	media (max-width: 768px) {
+		.page-header
+
+	{
+		padding: 2rem 0 1.5rem;
+		margin-bottom: 2rem;
+	}
+
+	.page-title {
+		font-size: 2rem;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+
+	.action-bar {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.action-left {
+		justify-content: space-between;
+	}
+
+	.item-content {
+		grid-template-columns: auto 80px 1fr;
+		gap: 1rem;
+	}
+
+	.item-actions {
+		grid-column: 1 / -1;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		margin-top: 1rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--border-light);
+	}
+
+	.btn {
+		min-width: auto;
+		flex: 1;
+	}
+
+	}
+
+	media (max-width: 480px) {
+		.container
+
+	{
+		padding: 0 1rem;
+	}
+
+	.item-content {
+		grid-template-columns: 1fr;
+		text-align: center;
+	}
+
+	.item-checkbox {
+		justify-self: start;
+	}
+
+	}
+
+	keyframes fadeInUp {
+		from
+
+	{
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	}
+
+	.wishlist-item {
+		animation: fadeInUp 0.6s ease-out;
+	}
+</style>
+
+<!-- Page Header -->
+<div class="page-header">
+	<div class="container">
+		<nav class="breadcrumb-nav" aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+			</ol>
+		</nav>
+
+		<h1 class="page-title">
+			<i class="bi bi-heart-fill"></i>
+			My Wishlist
+			<span class="wishlist-count" id="wishlistCountHeader">0 items</span>
+		</h1>
+	</div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="container">
+	<!-- Action Bar -->
+	<div class="action-bar" id="actionBar" style="display: none;">
+		<div class="action-left">
+			<label class="d-flex align-items-center gap-2">
+				<input type="checkbox" class="select-all-checkbox" id="selectAll">
+				<span>Select All</span>
+			</label>
+
+			<div class="bulk-actions" id="bulkActions">
+				<button class="action-btn" onclick="addSelectedToCart()">
+					<i class="bi bi-cart-plus"></i>
+					Add to Cart
+				</button>
+				<button class="action-btn danger" onclick="removeSelectedItems()">
+					<i class="bi bi-trash"></i>
+					Remove Selected
+				</button>
+			</div>
+		</div>
+
+		<div class="action-right">
+			<select class="sort-dropdown" id="sortDropdown" onchange="sortWishlist()">
+				<option value="dateAdded">Sort by Date Added</option>
+				<option value="title">Sort by Title</option>
+				<option value="author">Sort by Author</option>
+				<option value="price">Sort by Price</option>
+			</select>
+		</div>
+	</div>
+
+	<!-- Wishlist Items -->
+	<div class="wishlist-grid" id="wishlistGrid">
+		<!-- Items will be populated by JavaScript -->
+	</div>
+
+	<!-- Empty State -->
+	<div class="empty-wishlist" id="emptyWishlist">
+		<div class="empty-icon">💔</div>
+		<h2 class="empty-title">Your wishlist is empty</h2>
+		<p class="empty-message">
+			Start adding books you love to your wishlist and never lose track of them again.
+		</p>
+		<a asp-action="Index" asp-controller="Home" class="btn btn-primary btn-large">
+			<i class="bi bi-book"></i>
+			Discover Books
+		</a>
+	</div>
+</div>
+
+<script>
+	// Sample book data - In real app, this would come from your model/API
+	const sampleBooks = {
+		1: { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", price: 12.99, image: "/images/gatsby.jpg", inStock: true },
+		2: { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", price: 14.99, image: "/images/mockingbird.jpg", inStock: true },
+		3: { id: 3, title: "1984", author: "George Orwell", price: 13.99, image: "/images/1984.jpg", inStock: false },
+		4: { id: 4, title: "Pride and Prejudice", author: "Jane Austen", price: 11.99, image: "/images/pride.jpg", inStock: true },
+		5: { id: 5, title: "The Catcher in the Rye", author: "J.D. Salinger", price: 15.99, image: "/images/catcher.jpg", inStock: true }
+	};
+
+	let wishlistItems = JSON.parse(localStorage.getItem('wishlist')) || [];
+	let selectedItems = new Set();
+
+	// Initialize page
+	document.addEventListener('DOMContentLoaded', function() {
+		renderWishlist();
+		setupEventListeners();
+	});
+
+	function setupEventListeners() {
+		// Select all checkbox
+		document.getElementById('selectAll').addEventListener('change', function() {
+			const checkboxes = document.querySelectorAll('.item-checkbox');
+			checkboxes.forEach(cb => {
+				cb.checked = this.checked;
+				const itemId = parseInt(cb.dataset.itemId);
+				if (this.checked) {
+					selectedItems.add(itemId);
+				} else {
+					selectedItems.delete(itemId);
+				}
+			});
+			updateBulkActions();
+		});
+	}
+
+	function renderWishlist() {
+		const wishlistGrid = document.getElementById('wishlistGrid');
+		const emptyWishlist = document.getElementById('emptyWishlist');
+		const actionBar = document.getElementById('actionBar');
+		const wishlistCountHeader = document.getElementById('wishlistCountHeader');
+
+		// Update header count
+		wishlistCountHeader.textContent = `${wishlistItems.length} item${wishlistItems.length !== 1 ? 's' : ''}`;
+
+		if (wishlistItems.length === 0) {
+			wishlistGrid.style.display = 'none';
+			actionBar.style.display = 'none';
+			emptyWishlist.style.display = 'block';
+			return;
+		}
+
+		wishlistGrid.style.display = 'grid';
+		actionBar.style.display = 'flex';
+		emptyWishlist.style.display = 'none';
+
+		// Sort items based on current sort option
+		const sortBy = document.getElementById('sortDropdown')?.value || 'dateAdded';
+		const sortedItems = [...wishlistItems].sort((a, b) => {
+			const bookA = sampleBooks[a.id];
+			const bookB = sampleBooks[b.id];
+
+			switch(sortBy) {
+				case 'title':
+					return bookA.title.localeCompare(bookB.title);
+				case 'author':
+					return bookA.author.localeCompare(bookB.author);
+				case 'price':
+					return bookA.price - bookB.price;
+				case 'dateAdded':
+				default:
+					return new Date(b.dateAdded) - new Date(a.dateAdded);
+			}
+		});
+
+		wishlistGrid.innerHTML = sortedItems.map(item => {
+			const book = sampleBooks[item.id];
+			if (!book) return '';
+
+			const dateAdded = new Date(item.dateAdded).toLocaleDateString();
+			const isSelected = selectedItems.has(item.id);
+
+			return `
+				<div class="wishlist-item ${isSelected ? 'selected' : ''}" data-item-id="${item.id}">
+					<div class="item-content">
+						<input type="checkbox" class="item-checkbox" data-item-id="${item.id}"
+							   ${isSelected ? 'checked' : ''} onchange="toggleItemSelection(${item.id})">
+
+						<img src="${book.image || '/images/default-book.png'}"
+							 alt="${book.title}" class="item-image" loading="lazy">
+
+						<div class="item-details">
+							<h3 class="item-title">
+								<a href="/Products/Details/${book.id}">${book.title}</a>
+							</h3>
+							<p class="item-author">by ${book.author}</p>
+							<div class="item-meta">
+								<span><i class="bi bi-calendar3"></i> Added ${dateAdded}</span>
+								<span class="stock-status ${book.inStock ? 'in-stock' : 'out-of-stock'}">
+									<i class="bi bi-${book.inStock ? 'check-circle' : 'x-circle'}"></i>
+									${book.inStock ? 'In Stock' : 'Out of Stock'}
+								</span>
+							</div>
+							<div class="item-price">$${book.price.toFixed(2)}</div>
+						</div>
+
+						<div class="item-actions">
+							<button class="btn btn-primary" onclick="addToCart(${book.id}, '${book.title}', ${book.price})"
+									${!book.inStock ? 'disabled' : ''}>
+								<i class="bi bi-cart-plus"></i>
+								${book.inStock ? 'Add to Cart' : 'Out of Stock'}
+							</button>
+							<button class="btn btn-outline" onclick="moveToCart(${item.id})">
+								<i class="bi bi-arrow-right"></i>
+								Move to Cart
+							</button>
+							<button class="remove-btn" onclick="removeFromWishlist(${item.id}, '${book.title}')"
+									title="Remove from wishlist">
+								<i class="bi bi-trash"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			`;
+		}).join('');
+	}
+
+	function toggleItemSelection(itemId) {
+		if (selectedItems.has(itemId)) {
+			selectedItems.delete(itemId);
+		} else {
+			selectedItems.add(itemId);
+		}
+
+		const item = document.querySelector(`[data-item-id="${itemId}"]`);
+		item.classList.toggle('selected', selectedItems.has(itemId));
+
+		updateBulkActions();
+		updateSelectAllCheckbox();
+	}
+
+	function updateBulkActions() {
+		const bulkActions = document.getElementById('bulkActions');
+		bulkActions.classList.toggle('active', selectedItems.size > 0);
+	}
+
+	function updateSelectAllCheckbox() {
+		const selectAll = document.getElementById('selectAll');
+		const totalItems = wishlistItems.length;
+		const selectedCount = selectedItems.size;
+
+		selectAll.checked = selectedCount === totalItems && totalItems > 0;
+		selectAll.indeterminate = selectedCount > 0 && selectedCount < totalItems;
+	}
+
+	function sortWishlist() {
+		renderWishlist();
+	}
+
+	function removeFromWishlist(itemId, title) {
+		wishlistItems = wishlistItems.filter(item => item.id !== itemId);
+		selectedItems.delete(itemId);
+		localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
+
+		showToast('Removed from Wishlist', `"${title}" has been removed from your wishlist.`);
+		renderWishlist();
+	}
+
+	function addToCart(productId, title, price) {
+		let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+		const existingItem = cartItems.find(item => item.id === productId);
+
+		if (existingItem) {
+			existingItem.quantity += 1;
+		} else {
+			cartItems.push({
+				id: productId,
+				title: title,
+				price: price,
+				quantity: 1,
+				dateAdded: new Date().toISOString()
+			});
+		}
+
+		localStorage.setItem('cart', JSON.stringify(cartItems));
+		showToast('Added to Cart', `"${title}" has been added to your cart.`);
+	}
+
+	function moveToCart(itemId) {
+		const item = wishlistItems.find(w => w.id === itemId);
+		const book = sampleBooks[itemId];
+
+		if (item && book) {
+			addToCart(itemId, book.title, book.price);
+			removeFromWishlist(itemId, book.title);
+			showToast('Moved to Cart', `"${book.title}" has been moved from wishlist to cart.`);
+		}
+	}
+
+	function addSelectedToCart() {
+		if (selectedItems.size === 0) return;
+
+		let addedCount = 0;
+		selectedItems.forEach(itemId => {
+			const book = sampleBooks[itemId];
+			if (book && book.inStock) {
+				addToCart(itemId, book.title, book.price);
+				addedCount++;
+			}
+		});
+
+		selectedItems.clear();
+		renderWishlist();
+		showToast('Added to Cart', `${addedCount} item${addedCount !== 1 ? 's' : ''} added to cart.`);
+	}
+
+	function removeSelectedItems() {
+		if (selectedItems.size === 0) return;
+
+		const removedCount = selectedItems.size;
+		selectedItems.forEach(itemId => {
+			wishlistItems = wishlistItems.filter(item => item.id !== itemId);
+		});
+
+		selectedItems.clear();
+		localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
+		renderWishlist();
+		showToast('Items Removed', `${removedCount} item${removedCount !== 1 ? 's' : ''} removed from wishlist.`, 'warning');
+	}
+
+	function showToast(title, message, type = 'success') {
+		const toast = document.createElement('div');
+		toast.className = `toast ${type}`;
+		toast.innerHTML = `
+			<div class="toast-icon">
+				<i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+			</div>
+			<div class="toast-content">
+				<div class="toast-title">${title}</div>
+				<div class="toast-message">${message}</div>
+			</div>
+			<button class="toast-close" onclick="this.parentElement.remove()">×</button>
+		`;
+
+		document.getElementById('toastContainer').appendChild(toast);
+
+		setTimeout(() => toast.classList.add('show'), 100);
+		setTimeout(() => {
+			toast.style.opacity = '0';
+			setTimeout(() => toast.remove(), 300);
+		}, 4000);
+	}
+</script>
