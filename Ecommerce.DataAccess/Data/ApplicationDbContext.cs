@@ -1,5 +1,6 @@
 ﻿using Ecom.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Ecom.Models;
 
 namespace FirstProject.Data
@@ -11,7 +12,7 @@ namespace FirstProject.Data
    // );  telling we are using SQlServer as options in our Application DBContext
    // before builder
 
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) 
         {
@@ -24,6 +25,7 @@ namespace FirstProject.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             // Seed Category Data
             modelBuilder.Entity<Category>().HasData(
                new Category { Id = 1, Name = "Action", DisplayOrder = 1 },
