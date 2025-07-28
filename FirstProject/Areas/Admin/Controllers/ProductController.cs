@@ -110,6 +110,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
                 {
                     // delete existing image also
                     string pathToDelete = Path.Combine(rootPath, productVm.Product.ImageUrl.TrimStart('\\'));
+                    if (System.IO.File.Exists(pathToDelete)) System.IO.File.Delete(pathToDelete);
                 }
                 // Set the ImageUrl property of the product to the unique file name
                 productVm.Product.ImageUrl = Path.Combine("uploads", "products", uniqueFileName).Replace("\\", "/");
