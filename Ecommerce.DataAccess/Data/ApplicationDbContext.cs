@@ -21,6 +21,7 @@ namespace FirstProject.Data
         // This line wil create a table category of type Category Class in Models in databaes
         public DbSet<Category> Categories { get; set; } // Table name is Categories
         public DbSet<Product> Products { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; } // Table name is ApplicationUsers
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
