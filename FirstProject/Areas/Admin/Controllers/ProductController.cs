@@ -1,6 +1,8 @@
 ﻿using Ecom.DataAccess.Repository.IRepository;
 using Ecom.Models;
 using Ecom.Models.ViewModels;
+using Ecommerce.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.FlowAnalysis;
@@ -9,6 +11,7 @@ using Mono.TextTemplating;
 namespace EcommerceMVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
     {
         // Dependency Injection for UnitOfWork
