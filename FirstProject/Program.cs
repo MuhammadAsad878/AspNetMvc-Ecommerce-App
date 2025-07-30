@@ -3,6 +3,8 @@ using Ecom.DataAccess.Repository.IRepository;
 using FirstProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Ecommerce.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +14,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
     ); // telling we are using SQlServer as options in our Application DBContext
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
+// Adding Identity services to the application
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders(); 
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddRazorPages(); // Adding Razor Pages services to the application
 // Registering the CategoryRepository with the ICategoryRepository interface for dependency injection
 var app = builder.Build();
 
