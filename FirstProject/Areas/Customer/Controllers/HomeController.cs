@@ -18,7 +18,7 @@ namespace EcommerceMVC.Areas.Customer.Controllers
             PaginationVM p = new()
             {
                 Count = products.Count(),
-                PageSize = 10,
+                PageSize = 12,
                 CurrPage = page,
             }; 
             if (page > 0)
