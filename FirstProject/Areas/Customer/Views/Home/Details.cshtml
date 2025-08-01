@@ -30,12 +30,15 @@
 }
 else
 {
-    <div class="container py-3">
-        <div class="card shadow-sm border-0 rounded-4">
-            <div class="row g-0 align-items-center">
+
+    <div class="container py-2">
+<!--Details of Product-->
+
+        <div class="card p-0 shadow-sm border-0 rounded-4" style="min-height:75vh;">
+            <div class="row  align-items-center">
 
                 <!-- Product Image -->
-                <div class="col-lg-5 p-4">
+                <div class="col-lg-5 p-1">
                     <div class="position-relative overflow-hidden rounded-4">
                         @{
                             var imageUrl = !String.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "~/images/default-featured-image.jpg";
@@ -99,15 +102,38 @@ else
                         </div>
                     </div>
 
-                    <!-- Add to Cart -->
+                    <!-- Add to Cart or Buy Now -->
                     <div>
                         <button class="btn btn-info w-100 rounded-pill text-white fw-bold shadow-sm">
                             <i class="bi bi-cart-plus me-2"></i> Add to Cart
                         </button>
+                        <button class="btn btn-dark w-100 rounded-pill text-white fw-bold shadow-lg mt-2">
+                            <i class="bi bi-cart-plus me-2"></i> Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Other Details of Product e.g Detailed Description etc -->
+            <div class="row">
+                <div class="row ms-2 p-3 text-white">
+                    <span class="col-8 col-auto bg-secondary p-2 ms-3">Description</span>
+                    <button class="btn btn-dark col-2 bg-black p-2 text-white text-center border-0 rounded-0" ><i class="bi bi-plus-square"></i></button>
+                    <div class="col-10 text-black ms-3 px-2 py-1" id="detailsDescription">
+                        <p>@Html.Raw(Model.Description)</p>
+                    </div>
+                </div>
+                <div class="row ms-2 p-3 text-white">
+                    <span class="col-8 col-auto bg-secondary p-2 ms-3">Author -- Category -- ISBN</span>
+                    <button class="btn btn-dark col-2 bg-black p-2 text-white text-center border-0 rounded-0"><i class="bi bi-plus-square"></i></button>
+                    <div class="col-10 text-black ms-3 px-2 py-1" id="detailsDescription">
+                        <p class="fs-4 text-muted"><strong>Author: </strong>@Model.Author</p><hr />
+                        <p class="fs-4 text-muted"><strong>Category: </strong>@(!string.IsNullOrEmpty(Model.Category.Name) ? Model.Category.Name : "None")</p><hr />
+                        <p class="fs-4 text-muted"><strong>ISBN: </strong>@Model.ISBN</p>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
 
