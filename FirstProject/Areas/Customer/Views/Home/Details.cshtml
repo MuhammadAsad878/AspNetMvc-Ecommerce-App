@@ -1,17 +1,26 @@
 ﻿@model Product
 
 <style>
-	/* Hide number input arrows for all browsers */
-	input[type="number"]::-webkit-inner-spin-button,
-	input[type="number"]::-webkit-outer-spin-button {
-		-webkit-appearance: none;
-		margin: 0;
-	}
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
-	input[type="number"] {
-		-moz-appearance: textfield;
-	}
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+
+    #mainImage:hover {
+        transform: scale(1.1);
+        cursor: zoom-in;
+    }
+
 </style>
+
+
+
+
 
 @if (Model == null)
 {
@@ -21,74 +30,92 @@
 }
 else
 {
-	<div class="container py-4" >
-		<div class="card shadow border-0" style="min-height:70vh;">
-			<div class="row g-0">
+    <div class="container py-3">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="row g-0 align-items-center">
 
-				<!-- Product Image -->
-				<div class="col-md-5">
-					<img src="@Url.Content(Model.ImageUrl ?? "~/images/default-featured-image.jpg")"
-						 alt="@Model.Title"
-						 class="img-fluid w-100 h-100 object-fit-cover rounded-top"
-						 style="max-height: 500px;" />
-				</div>
+                <!-- Product Image -->
+                <div class="col-lg-5 p-4">
+                    <div class="position-relative overflow-hidden rounded-4">
+                        @{
+                            var imageUrl = !String.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "~/images/default-featured-image.jpg";
+                        }
+                        <img src="@Url.Content(imageUrl)"
+                             alt="@Model.Title"
+                             class="img-fluid w-100 object-fit-cover"
+                             id="mainImage"
+                             style="max-height: 500px; transition: transform 0.3s ease;" />
+                    </div>
+                </div>
 
-				<!-- Product Details -->
-				<div class="col-md-7 p-4">
-					<h2 class="fw-bold" title="@Model.Title">@Model.Title</h2>
+                <!-- Product Details -->
+                <div class="col-lg-7 p-5">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h2 class="fw-bold mb-0 text-dark">@Model.Title</h2>
+                        <button onclick="history.back()" class="btn btn-outline-secondary btn-sm" title="Go Back">
+                            <i class="bi bi-arrow-left"></i>
+                        </button>
+                    </div>
 
-					<!-- Price -->
-					<div class="mb-3">
-						<span class="text-muted text-decoration-line-through" title="Orignal Price">@Model.Price.ToString("c")</span>
-						<span class="text-danger h5 fw-bold ms-2" title="Sale Price">@Model.Price50.ToString("c")</span>
-					</div>
+                    <!-- Price -->
+                    <div class="mb-3">
+                        <span class="text-muted text-decoration-line-through">@Model.Price.ToString("c")</span>
+                        <span class="text-danger h4 fw-bold ms-2">@Model.Price50.ToString("c")</span>
+                    </div>
 
-					<!-- Description -->
-					<div class="mb-3">
-						@{
-							var shortDesc = Model.Description?.Length > 300 ? Model.Description.Substring(0, 300) + "..." : Model.Description;
-						}
-						<p class="text-muted">@Html.Raw(shortDesc)</p>
-					</div>
+                    <!-- Category -->
+                    @if (!string.IsNullOrWhiteSpace(Model.Category?.Name))
+                    {
+                        <div class="mb-3">
+                            <span class="badge bg-warning text-dark px-3 py-2">
+                                <i class="bi bi-bookmark-fill me-1"></i> @Model.Category.Name
+                            </span>
+                        </div>
+                    }
 
-					<!-- Category Badge -->
-					<span class="badge bg-warning text-dark rounded-pill px-3 py-2 mb-3" title="Book Category">
-						<i class="bi bi-bookmark-fill me-1"></i> @Model.Category?.Name
-					</span>
+                    <!-- Description -->
+                    <p class="text-muted small mb-4">
+                        @Html.Raw(Model.Description?.Length > 400 ? Model.Description.Substring(0, 400) + "..." : Model.Description)
+                    </p>
 
-					<!-- Quantity Selector -->
-					<div class="d-flex align-items-center mb-3">
-						<span class="me-2 fw-semibold">Quantity:</span>
-						<div class="input-group border rounded-pill overflow-hidden" style="max-width: 150px;">
-							<button class="btn btn-light border-0" title="Decrease quantity" type="button" onclick="decQty()">
-								<i class="bi bi-dash-lg"></i>
-							</button>
-							<input type="number"
-								   id="prdQty"
-								   class="form-control text-center border-0 shadow-none"
-								   value="1"
-								   min="1"
-								   step="1"
-								   onchange="onChange()"
-								   onkeydown="return preventInvalidKeys(event)" />
-							<button class="btn btn-light border-0" title="Increase quantity" type="button" onclick="incQty()">
-								<i class="bi bi-plus-lg"></i>
-							</button>
-						</div>
-					</div>
+                    <!-- Quantity Selector -->
+                    <div class="mb-4">
+                        <label for="prdQty" class="form-label fw-semibold">Quantity</label>
+                        <div class="input-group rounded-pill overflow-hidden" style="max-width: 160px;">
+                            <button class="btn btn-outline-secondary border-0" type="button" onclick="decQty()">
+                                <i class="bi bi-dash-lg"></i>
+                            </button>
+                            <input type="number"
+                                   id="prdQty"
+                                   class="form-control text-center border-0 shadow-none"
+                                   value="1"
+                                   min="1"
+                                   step="1"
+                                   onchange="onChange()"
+                                   onkeydown="return preventInvalidKeys(event)" />
+                            <button class="btn btn-outline-secondary border-0" type="button" onclick="incQty()">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
 
-					<!-- Add to Cart Button -->
-					<button class="btn btn-info rounded-pill w-100 fw-bold text-white shadow">
-						<i class="bi bi-cart-plus me-1"></i> Add to Cart
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <!-- Add to Cart -->
+                    <div>
+                        <button class="btn btn-info w-100 rounded-pill text-white fw-bold shadow-sm">
+                            <i class="bi bi-cart-plus me-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 	<!-- Quantity JS -->
 	<script>
 		const inp = document.getElementById("prdQty");
+				
+
 
 		function incQty() {
 			inp.value = parseInt(inp.value) + 1;
