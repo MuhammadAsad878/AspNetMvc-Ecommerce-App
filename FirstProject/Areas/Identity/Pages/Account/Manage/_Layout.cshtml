@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -9,17 +9,23 @@
     }
 }
 
-<h1>Manage your account</h1>
+<div class="container py-5">
+    <div class="mb-4 text-center">
+        <h1 class="fw-bold display-6">Manage Your Account</h1>
+        <p class="text-muted">Update your settings and account preferences</p>
+        <hr />
+    </div>
 
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-3 col-md-4 mb-4">
             <partial name="_ManageNav" />
         </div>
-        <div class="col-md-9">
-            @RenderBody()
+        <div class="col-lg-9 col-md-8">
+            <div class="card shadow-sm rounded-3">
+                <div class="card-body">
+                    @RenderBody()
+                </div>
+            </div>
         </div>
     </div>
 </div>

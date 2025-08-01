@@ -30,10 +30,22 @@ namespace EcommerceMVC.Areas.Customer.Controllers
                 p.products = products.Take(p.PageSize);
             }
             // Set the ViewBag properties for pagination
-            
-
-
             return View(p);
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if(id == null || id <= 0)
+            {
+                return NotFound();
+            }
+            // Fetch the product details from the database using the unit of work pattern
+            Product product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "Category");
+            if(product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
         }
 
         public IActionResult Privacy()
@@ -63,6 +75,9 @@ namespace EcommerceMVC.Areas.Customer.Controllers
         {
             return View();
         }
+
+
+
 
         #region
 

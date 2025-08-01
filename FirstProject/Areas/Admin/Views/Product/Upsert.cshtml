@@ -65,16 +65,13 @@
                             </div>
                         </div>
                         <!-- Image & File col-2-->
-                        <div class="col-4">
-                            
-                                @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
-                                {
-                                    <img src="~/@Model.Product.ImageUrl" alt="@Model.Product.Title" class="img-thumbnail" style="min-height:150px ;max-height: 250px;" />
-                                }
-                                else
-                                {
-                                <img src="~/images/default-book.png" alt="No Image" class="img-thumbnail" style="min-height:150px ;max-height: 200px;" />
-                                }
+                        <div class="col-4">                        
+                          <img
+                            <img src="@Url.Content(string.IsNullOrEmpty(Model.Product.ImageUrl) ? Url.Content("~/images/default-featured-image.jpg") : Model.Product.ImageUrl)"
+                                 alt="@Model.Product.Title" class="img-thumbnail"
+                              style="min-height:150px ;max-height: 250px;"
+                                    />
+                               
                             <div class="text-sm-center">                            
                          <input name="file" type="file" class="btn btn-sm"  />
                             </div>

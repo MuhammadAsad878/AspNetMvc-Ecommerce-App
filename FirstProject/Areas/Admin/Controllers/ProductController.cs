@@ -91,6 +91,20 @@ namespace EcommerceMVC.Areas.Admin.Controllers
             // Handle file upload if a file is provided
             if(file != null && file.Length > 0)
             {
+                var permittedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+                if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
+                {
+                    TempData["ErrorMessage"] = "Invalid file type. Please upload an image.";
+                    productVm.catListItems = _unitOfWork.Category.GetAll().Select(u=> new SelectListItem
+                    {
+                        Text=u.Name,
+                        Value = u.Id.ToString()
+                    });
+                    return View(productVm);
+                }
+
                 // Generate a Unique file name
                 string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                 // Path to save the file 
@@ -116,7 +130,7 @@ namespace EcommerceMVC.Areas.Admin.Controllers
                     if (System.IO.File.Exists(pathToDelete)) System.IO.File.Delete(pathToDelete);
                 }
                 // Set the ImageUrl property of the product to the unique file name
-                productVm.Product.ImageUrl = Path.Combine("uploads", "products", uniqueFileName).Replace("\\", "/");
+                productVm.Product.ImageUrl = "/" + Path.Combine("uploads", "products", uniqueFileName).Replace("\\", "/");
                 
             }
             if (productVm.Product.ImageUrl == null)
