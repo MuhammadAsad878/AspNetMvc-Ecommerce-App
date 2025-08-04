@@ -1,170 +1,178 @@
 ﻿@model Product
 
+<!-- Styles -->
 <style>
     input[type="number"]::-webkit-inner-spin-button,
     input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+        -webkit-appearance: none;
+        margin: 0;
+    }
 
     input[type="number"] {
         -moz-appearance: textfield;
     }
 
     #mainImage:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
         cursor: zoom-in;
     }
-
 </style>
-
-
-
-
 
 @if (Model == null)
 {
-	<div class="container py-5 text-center">
-		<h4 class="text-danger">Product not found.</h4>
-	</div>
+    <div class="container py-5 text-center">
+        <h4 class="text-danger">Product not found.</h4>
+    </div>
 }
 else
 {
-
-    <div class="container py-2">
-<!--Details of Product-->
-
-        <div class="card p-0 shadow-sm border-0 rounded-4" style="min-height:75vh;">
-            <div class="row  align-items-center">
-
+    <div class="container py-4">
+        <div class="card border-0 rounded-4 shadow-lg">
+            <div class="row g-0">
                 <!-- Product Image -->
-                <div class="col-lg-5 p-1">
-                    <div class="position-relative overflow-hidden rounded-4">
+                <div class="col-lg-5">
+                    <div class="p-3">
                         @{
-                            var imageUrl = !String.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "~/images/default-featured-image.jpg";
+                            var imageUrl = !string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "~/images/default-featured-image.jpg";
                         }
-                        <img src="@Url.Content(imageUrl)"
-                             alt="@Model.Title"
-                             class="img-fluid w-100 object-fit-cover"
-                             id="mainImage"
-                             style="max-height: 500px; transition: transform 0.3s ease;" />
+                        <img src="@Url.Content(imageUrl)" alt="@Model.Title" class="img-fluid w-100 rounded-4 object-fit-cover" id="mainImage" style="max-height: 500px;" />
                     </div>
                 </div>
 
                 <!-- Product Details -->
-                <div class="col-lg-7 p-5">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h2 class="fw-bold mb-0 text-dark">@Model.Title</h2>
-                        <button onclick="history.back()" class="btn btn-outline-secondary btn-sm" title="Go Back">
-                            <i class="bi bi-arrow-left"></i>
-                        </button>
-                    </div>
+                <div class="col-lg-7">
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h2 class="fw-bold text-dark">@Model.Title</h2>
+                            <button onclick="history.back()" class="btn btn-outline-secondary btn-sm" title="Go Back">
+                                <i class="bi bi-arrow-left"></i>
+                            </button>
+                        </div>
 
-                    <!-- Price -->
-                    <div class="mb-3">
-                        <span class="text-muted text-decoration-line-through">@Model.Price.ToString("c")</span>
-                        <span class="text-danger h4 fw-bold ms-2">@Model.Price50.ToString("c")</span>
-                    </div>
-
-                    <!-- Category -->
-                    @if (!string.IsNullOrWhiteSpace(Model.Category?.Name))
-                    {
                         <div class="mb-3">
-                            <span class="badge bg-warning text-dark px-3 py-2">
-                                <i class="bi bi-bookmark-fill me-1"></i> @Model.Category.Name
-                            </span>
+                            <span class="text-muted text-decoration-line-through">@Model.Price.ToString("c")</span>
+                            <span class="text-danger h4 fw-bold ms-2">@Model.Price50.ToString("c")</span>
                         </div>
-                    }
 
-                    <!-- Description -->
-                    <p class="text-muted small mb-4">
-                        @Html.Raw(Model.Description?.Length > 400 ? Model.Description.Substring(0, 400) + "..." : Model.Description)
-                    </p>
+                        @if (!string.IsNullOrWhiteSpace(Model.Category?.Name))
+                        {
+                            <div class="mb-3">
+                                <span class="badge bg-warning text-dark px-3 py-2">
+                                    <i class="bi bi-bookmark-fill me-1"></i> @Model.Category.Name
+                                </span>
+                            </div>
+                        }
 
-                    <!-- Quantity Selector -->
-                    <div class="mb-4">
-                        <label for="prdQty" class="form-label fw-semibold">Quantity</label>
-                        <div class="input-group rounded-pill overflow-hidden" style="max-width: 160px;">
-                            <button class="btn btn-outline-secondary border-0" type="button" onclick="decQty()">
-                                <i class="bi bi-dash-lg"></i>
+                        <p class="small mb-4">
+                            @Html.Raw(Model.Description?.Length > 400 ? Model.Description.Substring(0, 400) + "..." : Model.Description)
+                        </p>
+
+                        <!-- Quantity Selector -->
+                        <div class="mb-4">
+                            <label for="prdQty" class="form-label fw-semibold">Quantity</label>
+                            <div class="input-group" style="max-width: 180px;">
+                                <button class="btn btn-outline-secondary" type="button" onclick="decQty()"><i class="bi bi-dash-lg"></i></button>
+                                <input type="number" id="prdQty" class="form-control text-center" value="1" min="1" step="1" onchange="onChange()" onkeydown="return preventInvalidKeys(event)" />
+                                <button class="btn btn-outline-secondary" type="button" onclick="incQty()"><i class="bi bi-plus-lg"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-info rounded-pill text-white fw-bold">
+                                <i class="bi bi-cart-plus me-2"></i> Add to Cart
                             </button>
-                            <input type="number"
-                                   id="prdQty"
-                                   class="form-control text-center border-0 shadow-none"
-                                   value="1"
-                                   min="1"
-                                   step="1"
-                                   onchange="onChange()"
-                                   onkeydown="return preventInvalidKeys(event)" />
-                            <button class="btn btn-outline-secondary border-0" type="button" onclick="incQty()">
-                                <i class="bi bi-plus-lg"></i>
+                            <button class="btn btn-dark rounded-pill text-white fw-bold">
+                                <i class="bi bi-lightning-fill me-2"></i> Buy Now
                             </button>
                         </div>
-                    </div>
-
-                    <!-- Add to Cart or Buy Now -->
-                    <div>
-                        <button class="btn btn-info w-100 rounded-pill text-white fw-bold shadow-sm">
-                            <i class="bi bi-cart-plus me-2"></i> Add to Cart
-                        </button>
-                        <button class="btn btn-dark w-100 rounded-pill text-white fw-bold shadow-lg mt-2">
-                            <i class="bi bi-cart-plus me-2"></i> Buy Now
-                        </button>
                     </div>
                 </div>
             </div>
-            <!-- Other Details of Product e.g Detailed Description etc -->
-            <div class="row">
-                <div class="row ms-2 p-3 text-white">
-                    <span class="col-8 col-auto bg-secondary p-2 ms-3">Description</span>
-                    <button class="btn btn-dark col-2 bg-black p-2 text-white text-center border-0 rounded-0" ><i class="bi bi-plus-square"></i></button>
-                    <div class="col-10 text-black ms-3 px-2 py-1" id="detailsDescription">
-                        <p>@Html.Raw(Model.Description)</p>
+
+            <!-- Accordion Section -->
+              <div class="row">
+            <div class="container py-4">
+                <div class="accordion" id="productAccordion">
+                    <!-- Description -->
+                    <div class="accordion-item border-0 shadow-sm mb-3">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-secondary-50 text-secondary shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription">
+                                Description
+                            </button>
+                        </h2>
+                        <div id="collapseDescription" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                            <div class="accordion-body bg-light text-dark">
+                                @Html.Raw(Model.Description)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Author / Category / ISBN -->
+                    <div class="accordion-item border-0 shadow-sm">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button bg-secondary-50 text-secondary shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails">
+                                Author, Category, ISBN
+                            </button>
+                        </h2>
+                        <div id="collapseDetails" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
+                            <div class="accordion-body bg-light text-dark">
+                                <p class="fs-5 text-muted"><strong>Author:</strong> @Model.Author</p>
+                                <hr />
+                                <p class="fs-5 text-muted"><strong>Category:</strong> @(string.IsNullOrEmpty(Model.Category.Name) ? "None" : Model.Category.Name)</p>
+                                <hr />
+                                <div class="d-flex align-items-center">
+                                    <p class="fs-5 text-muted me-2 mb-0">
+                                        <strong>ISBN:</strong> <span id="isbnText">@Model.ISBN</span>
+                                    </p>
+                                    <button class="btn btn-sm btn-outline-secondary" onclick="copyISBN()" title="Copy ISBN">
+                                        <i class="bi bi-clipboard"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row ms-2 p-3 text-white">
-                    <span class="col-8 col-auto bg-secondary p-2 ms-3">Author -- Category -- ISBN</span>
-                    <button class="btn btn-dark col-2 bg-black p-2 text-white text-center border-0 rounded-0"><i class="bi bi-plus-square"></i></button>
-                    <div class="col-10 text-black ms-3 px-2 py-1" id="detailsDescription">
-                        <p class="fs-4 text-muted"><strong>Author: </strong>@Model.Author</p><hr />
-                        <p class="fs-4 text-muted"><strong>Category: </strong>@(!string.IsNullOrEmpty(Model.Category.Name) ? Model.Category.Name : "None")</p><hr />
-                        <p class="fs-4 text-muted"><strong>ISBN: </strong>@Model.ISBN</p>
-                    </div>
-                </div>
+            </div>
             </div>
         </div>
-
     </div>
+}
 
+@section Scripts {
+    <script>
+        const inp = document.getElementById("prdQty");
 
-	<!-- Quantity JS -->
-	<script>
-		const inp = document.getElementById("prdQty");
-				
+        function incQty() {
+            inp.value = parseInt(inp.value) + 1;
+        }
 
+        function decQty() {
+            if (parseInt(inp.value) > 1) {
+                inp.value = parseInt(inp.value) - 1;
+            }
+        }
 
-		function incQty() {
-			inp.value = parseInt(inp.value) + 1;
-		}
+        function onChange() {
+            inp.value = inp.value.replace(/[^0-9]/g, '');
+            let val = parseInt(inp.value);
+            if (isNaN(val) || val < 1) {
+                inp.value = 1;
+            }
+        }
 
-		function decQty() {
-			if (parseInt(inp.value) > 1) {
-				inp.value = parseInt(inp.value) - 1;
-			}
-		}
-
-		function onChange() {
-			inp.value = inp.value.replace(/[^0-9]/g, '');
-			let val = parseInt(inp.value);
-			if (isNaN(val) || val < 1) {
-				inp.value = 1;
-			}
-		}
-
-		function preventInvalidKeys(e) {
-			if (["e", "E", "+", "-", "."].includes(e.key)) {
-				e.preventDefault();
-			}
-		}
-	</script>
+        function preventInvalidKeys(e) {
+            if (["e", "E", "+", "-", "."].includes(e.key)) {
+                e.preventDefault();
+            }
+            } function copyISBN() {
+            const text = document.getElementById("isbnText").innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("ISBN copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
+        }
+    </script>
 }
