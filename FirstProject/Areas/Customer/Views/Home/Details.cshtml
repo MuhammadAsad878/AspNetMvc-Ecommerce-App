@@ -28,7 +28,7 @@
 else
 {
     <div class="container py-4">
-        <div class="card border-0 rounded-4 shadow-lg">
+        <div class="card border-0 rounded-4 shadow-sm">
             <div class="row g-0">
                 <!-- Product Image -->
                 <div class="col-lg-5">
@@ -92,51 +92,55 @@ else
             </div>
 
             <!-- Accordion Section -->
-              <div class="row">
-            <div class="container py-4">
-                <div class="accordion" id="productAccordion">
-                    <!-- Description -->
-                    <div class="accordion-item border-0 shadow-sm mb-3">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-secondary-50 text-secondary shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription">
-                                Description
-                            </button>
-                        </h2>
-                        <div id="collapseDescription" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
-                            <div class="accordion-body bg-light text-dark">
-                                @Html.Raw(Model.Description)
-                            </div>
-                        </div>
-                    </div>
+            <div class="row justify-content-center">
+                <div class="col-md-10 col-sm-12 py-4">
+                    <div class="accordion accordion-flush shadow-sm rounded-4" id="productAccordion">
 
-                    <!-- Author / Category / ISBN -->
-                    <div class="accordion-item border-0 shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button bg-secondary-50 text-secondary shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails">
-                                Author, Category, ISBN
-                            </button>
-                        </h2>
-                        <div id="collapseDetails" class="accordion-collapse collapse" data-bs-parent="#productAccordion">
-                            <div class="accordion-body bg-light text-dark">
-                                <p class="fs-5 text-muted"><strong>Author:</strong> @Model.Author</p>
-                                <hr />
-                                <p class="fs-5 text-muted"><strong>Category:</strong> @(string.IsNullOrEmpty(Model.Category.Name) ? "None" : Model.Category.Name)</p>
-                                <hr />
-                                <div class="d-flex align-items-center">
-                                    <p class="fs-5 text-muted me-2 mb-0">
-                                        <strong>ISBN:</strong> <span id="isbnText">@Model.ISBN</span>
-                                    </p>
-                                    <button class="btn btn-sm btn-outline-secondary" onclick="copyISBN()" title="Copy ISBN">
-                                        <i class="bi bi-clipboard"></i>
-                                    </button>
+                        <!-- Description -->
+                        <div class="accordion-item border-start border-4 border-primary-subtle mb-2 rounded-3">
+                            <h2 class="accordion-header" id="headingDescription">
+                                <button class="accordion-button collapsed fw-semibold bg-light text-dark rounded-top-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
+                                    <i class="bi bi-info-circle me-2 text-primary"></i> Description
+                                </button>
+                            </h2>
+                            <div id="collapseDescription" class="accordion-collapse collapse" aria-labelledby="headingDescription" data-bs-parent="#productAccordion">
+                                <div class="accordion-body bg-white rounded-bottom-3">
+                                    @Html.Raw(Model.Description)
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Author / Category / ISBN -->
+                        <div class="accordion-item border-start border-4 border-secondary-subtle mb-2 rounded-3">
+                            <h2 class="accordion-header" id="headingDetails">
+                                <button class="accordion-button collapsed fw-semibold bg-light text-dark rounded-top-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
+                                    <i class="bi bi-journal-text me-2 text-secondary"></i> Author, Category & ISBN
+                                </button>
+                            </h2>
+                            <div id="collapseDetails" class="accordion-collapse collapse" aria-labelledby="headingDetails" data-bs-parent="#productAccordion">
+                                <div class="accordion-body bg-white rounded-bottom-3">
+                                    <p class="mb-2"><strong class="text-dark">Author:</strong> @Model.Author</p>
+                                    <hr />
+                                    <p class="mb-2"><strong class="text-dark">Category:</strong> @(string.IsNullOrEmpty(Model.Category?.Name) ? "None" : Model.Category.Name)</p>
+                                    <hr />
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <p class="mb-0"><strong class="text-dark">ISBN:</strong> <span id="isbnText">@Model.ISBN</span></p>
+                                        <button class="btn btn-sm btn-outline-dark" onclick="copyISBN()" title="Copy ISBN">
+                                            <i class="bi bi-clipboard"></i> Copy
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
-            </div>
+
+            <!-- Accordion Section Closed-->
+
         </div>
+
     </div>
 }
 
